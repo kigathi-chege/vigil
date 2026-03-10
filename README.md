@@ -21,13 +21,22 @@ conky/
 
 **Quick Install:**
 ```bash
+# Clone the repository
+git clone https://github.com/kigathi-chege/conky-widget-framework.git
+cd conky-widget-framework
+
 # Copy to Conky config directory and start
-cp -r ~/Projects/conky ~/.config/ && conky -c ~/.config/conky/conky.conf
+cp -r . ~/.config/conky && conky -c ~/.config/conky/conky.conf
 ```
 
 **Manual Install:**
-1. Copy the entire `conky/` directory to any location
-2. Run: `conky -c /path/to/conky/conky.conf`
+```bash
+# Clone the repository
+git clone https://github.com/kigathi-chege/conky-widget-framework.git
+
+# Run from any location
+conky -c /path/to/conky-widget-framework/conky.conf
+```
 
 The framework uses relative paths - no configuration needed regardless of installation location.
 
