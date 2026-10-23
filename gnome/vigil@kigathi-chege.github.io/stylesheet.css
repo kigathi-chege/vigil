@@ -1,6 +1,10 @@
 /* Top bar */
 .wf-panel-label { padding-left: 4px; font-feature-settings: "tnum"; }
-.wf-panel-label.wf-warn { color: #ff9f43; font-weight: bold; }
+.panel-button.wf-indicator, .panel-button.wf-indicator:hover, .panel-button.wf-indicator:active,
+.panel-button.wf-indicator:checked, .panel-button.wf-indicator:focus { background-color: transparent; box-shadow: none; }
+.wf-pill { border-radius: 99px; padding: 2px 10px; margin: 3px 0; spacing: 6px; border: 1px solid transparent; }
+.wf-indicator:hover .wf-pill, .wf-indicator:checked .wf-pill, .wf-indicator:focus .wf-pill { border-color: rgba(255, 255, 255, 0.7); }
+.wf-pill.wf-danger .wf-panel-label { font-weight: bold; }
 
 /* Menu */
 .wf-summary { font-feature-settings: "tnum"; color: #ccc; }

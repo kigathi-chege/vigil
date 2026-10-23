@@ -9,7 +9,7 @@ Keep watch over your machine, with a daily Bible verse. System monitoring for th
 
 ![Desktop card and menu](docs/gnome-menu.png)
 
-- **Top bar:** CPU and memory (optionally swap). It turns orange when memory or swap passes the warning level (90% by default).
+- **Top bar:** CPU and memory (optionally swap) on a colored pill that is always there: **green** when all is well, **amber** at the warning level (75%), **red** at danger (90%). Memory and swap count by default, CPU (averaged over ~10 s) if you turn it on. The menu says what tripped it. Levels, metrics and all three colors are in Settings.
 - **Click it** for your top processes, sorted by CPU or memory. Each row shows what the process really is (`node … svelte-check`, not just `node`) and has **Pause / Resume / End / Kill**:
   - End asks politely (SIGTERM); Kill forces it (SIGKILL). Both need a second click unless you turn that off.
   - The list is taken when the menu opens and doesn't reorder under your pointer. A button only ever signals the exact process it was shown for, even if its PID has since been reused.

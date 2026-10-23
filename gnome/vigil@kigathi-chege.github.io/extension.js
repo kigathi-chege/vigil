@@ -20,6 +20,23 @@ import {VerseProvider} from './verse.js';
 
 const MONITOR_APPS = ['net.nokyan.Resources.desktop', 'org.gnome.SystemMonitor.desktop', 'gnome-system-monitor.desktop'];
 
+function parseColor(css) {
+    const hex = css.trim().match(/^#([0-9a-f]{6})$/i);
+    if (hex)
+        return [0, 2, 4].map(i => parseInt(hex[1].slice(i, i + 2), 16));
+    const rgb = css.match(/rgba?\(([^)]+)\)/);
+    return rgb ? rgb[1].split(',').slice(0, 3).map(Number) : [0, 0, 0];
+}
+
+// Black or white text, whichever reads better on the chosen background.
+function readableTextOn(css) {
+    const [r, g, b] = parseColor(css).map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.35 ? '#1a1a1a' : '#ffffff';
+}
+
 function button(text, style = 'wf-button') {
     return new St.Button({label: text, style_class: style, can_focus: true, y_align: Clutter.ActorAlign.CENTER});
 }
@@ -129,6 +146,7 @@ const Indicator = GObject.registerClass(
 class Indicator extends PanelMenu.Button {
     _init(extension) {
         super._init(0.5, 'Vigil');
+        this.add_style_class_name('wf-indicator');
         this._extension = extension;
         this.settings = extension.getSettings();
         this.processes = new ProcessSampler();
@@ -136,7 +154,9 @@ class Indicator extends PanelMenu.Button {
         this._rows = [];
         this._sources = new Set();
 
-        const box = new St.BoxLayout({style_class: 'panel-status-menu-box'});
+        const box = new St.BoxLayout({style_class: 'panel-status-menu-box wf-pill', y_align: Clutter.ActorAlign.CENTER});
+        this._pill = box;
+        this._cpuHistory = [];
         box.add_child(new St.Icon({icon_name: 'utilities-system-monitor-symbolic', style_class: 'system-status-icon'}));
         this._label = new St.Label({text: '…', y_align: Clutter.ActorAlign.CENTER, style_class: 'wf-panel-label'});
         box.add_child(this._label);
@@ -255,18 +275,14 @@ class Indicator extends PanelMenu.Button {
         this._label.text = parts.join('  ');
         this._label.visible = parts.length > 0;
 
-        // Orange when memory or swap is nearly full: the moment to open the menu and find the culprit.
-        const limit = this.settings.get_uint('memory-warning');
-        if (s.memPercent >= limit || (s.swapTotal && s.swapPercent >= limit))
-            this._label.add_style_class_name('wf-warn');
-        else
-            this._label.remove_style_class_name('wf-warn');
+        const status = this._status(s);
+        this._paintPill(status.level);
 
         this._summary.text = [
             `CPU ${s.cpu === null ? '…' : `${s.cpu.toFixed(0)}%`}`,
             `Memory ${formatBytes(s.memUsed)} / ${formatBytes(s.memTotal)}`,
             s.swapTotal ? `Swap ${formatBytes(s.swapUsed)} / ${formatBytes(s.swapTotal)}` : 'Swap off',
-        ].join('   ·   ');
+        ].join('   ·   ') + (status.reasons.length ? `\n${status.level === 'danger' ? 'Danger' : 'Warning'}: ${status.reasons.join(', ')}` : '');
 
         // Processes are scanned only while someone is looking at them.
         const deskCount = this._desktop && this.settings.get_boolean('desktop-show-system')
@@ -282,6 +298,42 @@ class Indicator extends PanelMenu.Button {
         this._desktop?.updateSystem(s, deskCount && list ? this.processes.top(list, this.settings.get_string('process-sort'), deskCount) : []);
 
         this.verse.ensureToday();
+    }
+
+    // Worst of the metrics that count (settings), against the warning and danger levels.
+    // CPU is averaged over the last ~10 seconds so a single busy moment doesn't flash the bar.
+    _status(s) {
+        if (s.cpu !== null)
+            this._cpuHistory.push(s.cpu);
+        const keep = Math.max(1, Math.round(10 / this.settings.get_uint('refresh-interval')));
+        this._cpuHistory.splice(0, Math.max(0, this._cpuHistory.length - keep));
+        const cpuAvg = this._cpuHistory.length ? this._cpuHistory.reduce((a, b) => a + b, 0) / this._cpuHistory.length : 0;
+
+        const metrics = [];
+        if (this.settings.get_boolean('alert-memory'))
+            metrics.push(['memory', s.memPercent]);
+        if (this.settings.get_boolean('alert-swap') && s.swapTotal)
+            metrics.push(['swap', s.swapPercent]);
+        if (this.settings.get_boolean('alert-cpu'))
+            metrics.push(['CPU', cpuAvg]);
+
+        const warning = this.settings.get_uint('warning-level');
+        const danger = this.settings.get_uint('danger-level');
+        const over = limit => metrics.filter(([, v]) => v >= limit).map(([n, v]) => `${n} ${v.toFixed(0)}%`);
+        const dangerous = over(danger);
+        if (dangerous.length)
+            return {level: 'danger', reasons: dangerous};
+        const warn = over(warning);
+        return warn.length ? {level: 'warning', reasons: warn} : {level: 'normal', reasons: []};
+    }
+
+    _paintPill(level) {
+        const background = this.settings.get_string(`color-${level}`);
+        const style = `background-color: ${background}; color: ${readableTextOn(background)};`;
+        if (this._pill.style !== style)
+            this._pill.style = style;
+        for (const l of ['normal', 'warning', 'danger'])
+            this._pill[l === level ? 'add_style_class_name' : 'remove_style_class_name'](`wf-${l}`);
     }
 
     _showVerse() {
