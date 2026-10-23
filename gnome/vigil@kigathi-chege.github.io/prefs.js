@@ -36,7 +36,7 @@ function group(title, rows, description = '') {
     return g;
 }
 
-export default class WidgetFrameworkPreferences extends ExtensionPreferences {
+export default class VigilPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         const s = this.getSettings();
         window.set_default_size(560, 720);
@@ -75,7 +75,7 @@ export default class WidgetFrameworkPreferences extends ExtensionPreferences {
         verse.add(group('Verse of the day', [
             comboRow(s, 'verse-source', 'Source', ['online', 'offline'],
                 ['OurManna (online, falls back to bundled)', 'Bundled KJV verses only']),
-        ], 'Fetched once a day and cached in ~/.cache/widget-framework.'));
+        ], 'Fetched once a day and cached in ~/.cache/vigil.'));
         window.add(verse);
     }
 }

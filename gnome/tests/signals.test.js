@@ -1,6 +1,6 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
-import {readStat, sendSignal, isProtected, ProcessSampler} from '../widget-framework@kigathi-chege.github.io/stats.js';
+import {readStat, sendSignal, isProtected, ProcessSampler} from '../vigil@kigathi-chege.github.io/stats.js';
 const sleep = ms => new Promise(r => GLib.timeout_add(0, ms, () => { r(); return false; }));
 const loop = new GLib.MainLoop(null, false);
 (async () => {

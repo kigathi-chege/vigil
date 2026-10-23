@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Install the GNOME Shell edition of the widget framework for the current user.
+# Install Vigil (the GNOME Shell edition) for the current user.
 #   ./gnome/install.sh            install (copy) and enable
 #   ./gnome/install.sh --link     symlink instead, so edits here apply after a re-login (for development)
 #   ./gnome/install.sh --pack     build a zip for `gnome-extensions install` or extensions.gnome.org
 #   ./gnome/install.sh --remove   disable and uninstall
 set -Eeuo pipefail
 
-UUID=widget-framework@kigathi-chege.github.io
+UUID=vigil@kigathi-chege.github.io
 SRC="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)/$UUID"
 DEST="${XDG_DATA_HOME:-$HOME/.local/share}/gnome-shell/extensions/$UUID"
 

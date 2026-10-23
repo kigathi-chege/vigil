@@ -1,4 +1,4 @@
-// Widget Framework for GNOME Shell: top-bar system monitor, process controls, verse of the day,
+// Vigil for GNOME Shell: top-bar system monitor, process controls, verse of the day,
 // and an optional desktop card.
 import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
@@ -128,7 +128,7 @@ class ProcessRow extends PopupMenu.PopupBaseMenuItem {
 const Indicator = GObject.registerClass(
 class Indicator extends PanelMenu.Button {
     _init(extension) {
-        super._init(0.5, 'Widget Framework');
+        super._init(0.5, 'Vigil');
         this._extension = extension;
         this.settings = extension.getSettings();
         this.processes = new ProcessSampler();
@@ -366,7 +366,7 @@ class Indicator extends PanelMenu.Button {
     }
 });
 
-export default class WidgetFrameworkExtension extends Extension {
+export default class VigilExtension extends Extension {
     enable() {
         this._indicator = new Indicator(this);
         Main.panel.addToStatusArea(this.uuid, this._indicator);

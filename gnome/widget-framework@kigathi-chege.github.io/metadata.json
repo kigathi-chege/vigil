@@ -1,9 +1,0 @@
-{
-  "uuid": "widget-framework@kigathi-chege.github.io",
-  "name": "Widget Framework",
-  "description": "System monitor in the top bar with process controls (pause, resume, end, kill), a verse of the day, and an optional desktop card. The GNOME/Wayland edition of conky-widget-framework.",
-  "shell-version": ["50"],
-  "settings-schema": "org.gnome.shell.extensions.widget-framework",
-  "url": "https://github.com/kigathi-chege/conky-widget-framework",
-  "version-name": "1.0"
-}

@@ -5,7 +5,7 @@ import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 Gio._promisify(Shell.Screenshot.prototype, 'screenshot');
 const OUT = GLib.getenv('WF_TEST_OUT');
-const UUID = 'widget-framework@kigathi-chege.github.io';
+const UUID = 'vigil@kigathi-chege.github.io';
 const wait = ms => new Promise(r => GLib.timeout_add(GLib.PRIORITY_DEFAULT, ms, () => { r(); return GLib.SOURCE_REMOVE; }));
 async function shot(name) {
     const stream = Gio.File.new_for_path(`${OUT}/${name}.png`).replace(null, false, Gio.FileCreateFlags.NONE, null);

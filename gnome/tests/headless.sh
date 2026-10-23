@@ -5,7 +5,7 @@
 # session and dconf are never touched (the guard below refuses to run otherwise).
 set -Eeuo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
-UUID=widget-framework@kigathi-chege.github.io
+UUID=vigil@kigathi-chege.github.io
 
 if [[ "${WF_ISOLATED:-}" != 1 ]]; then
   OUT="$(readlink -f "${1:-$(mktemp -d)}")"; mkdir -p "$OUT"

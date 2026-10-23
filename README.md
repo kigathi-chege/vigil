@@ -1,6 +1,6 @@
-# Conky Widget Framework
+# Vigil
 
-System monitoring and a daily Bible verse for the Linux desktop, in two editions:
+Keep watch over your machine, with a daily Bible verse. System monitoring for the Linux desktop, in two editions:
 
 - **GNOME Shell extension** (`gnome/`): for Ubuntu and other GNOME desktops, including Wayland, where Conky can't sit on the desktop. Interactive: pause, resume, end or kill processes from the top bar.
 - **Conky** (`conky.conf`, `lua/`): the original, for X11 desktops.
@@ -21,8 +21,8 @@ System monitoring and a daily Bible verse for the Linux desktop, in two editions
 ### Install
 
 ```bash
-git clone https://github.com/kigathi-chege/conky-widget-framework.git
-cd conky-widget-framework
+git clone https://github.com/kigathi-chege/vigil.git
+cd vigil
 ./gnome/install.sh          # then log out and back in once (Wayland loads new extensions at login)
 ```
 
@@ -61,8 +61,8 @@ conky/
 **Quick Install:**
 ```bash
 # Clone the repository
-git clone https://github.com/kigathi-chege/conky-widget-framework.git
-cd conky-widget-framework
+git clone https://github.com/kigathi-chege/vigil.git
+cd vigil
 
 # Copy to Conky config directory and start
 cp -r . ~/.config/conky && conky -c ~/.config/conky/conky.conf
@@ -71,10 +71,10 @@ cp -r . ~/.config/conky && conky -c ~/.config/conky/conky.conf
 **Manual Install:**
 ```bash
 # Clone the repository
-git clone https://github.com/kigathi-chege/conky-widget-framework.git
+git clone https://github.com/kigathi-chege/vigil.git
 
 # Run from any location
-conky -c /path/to/conky-widget-framework/conky.conf
+conky -c /path/to/vigil/conky.conf
 ```
 
 The framework uses relative paths - no configuration needed regardless of installation location.

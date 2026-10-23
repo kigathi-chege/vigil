@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <enum id="org.gnome.shell.extensions.widget-framework.sort">
+  <enum id="org.gnome.shell.extensions.vigil.sort">
     <value nick="cpu" value="0"/>
     <value nick="memory" value="1"/>
   </enum>
-  <enum id="org.gnome.shell.extensions.widget-framework.corner">
+  <enum id="org.gnome.shell.extensions.vigil.corner">
     <value nick="top-left" value="0"/>
     <value nick="top-right" value="1"/>
     <value nick="bottom-left" value="2"/>
     <value nick="bottom-right" value="3"/>
   </enum>
-  <enum id="org.gnome.shell.extensions.widget-framework.verse-source">
+  <enum id="org.gnome.shell.extensions.vigil.verse-source">
     <value nick="online" value="0"/>
     <value nick="offline" value="1"/>
   </enum>
 
-  <schema id="org.gnome.shell.extensions.widget-framework" path="/org/gnome/shell/extensions/widget-framework/">
+  <schema id="org.gnome.shell.extensions.vigil" path="/org/gnome/shell/extensions/vigil/">
     <key name="refresh-interval" type="u">
       <range min="1" max="30"/>
       <default>2</default>
@@ -36,7 +36,7 @@
       <default>8</default>
       <summary>Processes listed in the menu</summary>
     </key>
-    <key name="process-sort" enum="org.gnome.shell.extensions.widget-framework.sort">
+    <key name="process-sort" enum="org.gnome.shell.extensions.vigil.sort">
       <default>'cpu'</default>
       <summary>Sort processes by CPU or memory</summary>
     </key>
@@ -47,7 +47,7 @@
     <key name="menu-show-verse" type="b"><default>true</default><summary>Show the verse in the menu</summary></key>
 
     <key name="desktop-widget" type="b"><default>true</default><summary>Show the card on the desktop</summary></key>
-    <key name="desktop-corner" enum="org.gnome.shell.extensions.widget-framework.corner">
+    <key name="desktop-corner" enum="org.gnome.shell.extensions.vigil.corner">
       <default>'top-left'</default>
       <summary>Desktop card corner</summary>
     </key>
@@ -61,7 +61,7 @@
     </key>
     <key name="desktop-show-verse" type="b"><default>true</default><summary>Show the verse on the desktop</summary></key>
 
-    <key name="verse-source" enum="org.gnome.shell.extensions.widget-framework.verse-source">
+    <key name="verse-source" enum="org.gnome.shell.extensions.vigil.verse-source">
       <default>'online'</default>
       <summary>Verse of the day from OurManna, or only the bundled KJV verses</summary>
     </key>

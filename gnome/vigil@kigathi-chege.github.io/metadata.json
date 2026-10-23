@@ -1,0 +1,9 @@
+{
+  "uuid": "vigil@kigathi-chege.github.io",
+  "name": "Vigil",
+  "description": "System monitor in the top bar with process controls (pause, resume, end, kill), a verse of the day, and an optional desktop card. Works on Wayland.",
+  "shell-version": ["50"],
+  "settings-schema": "org.gnome.shell.extensions.vigil",
+  "url": "https://github.com/kigathi-chege/vigil",
+  "version-name": "1.0"
+}

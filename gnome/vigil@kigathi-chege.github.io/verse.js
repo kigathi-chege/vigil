@@ -16,7 +16,7 @@ export class VerseProvider {
     constructor(extensionPath, settings, onChange) {
         this._settings = settings;
         this._onChange = onChange;
-        this._cacheFile = GLib.build_filenamev([GLib.get_user_cache_dir(), 'widget-framework', 'verse.json']);
+        this._cacheFile = GLib.build_filenamev([GLib.get_user_cache_dir(), 'vigil', 'verse.json']);
         this._session = new Soup.Session({timeout: 10});
         this._cancellable = new Gio.Cancellable();
         try {
