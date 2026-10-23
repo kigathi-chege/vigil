@@ -7,13 +7,19 @@ Gio._promisify(Shell.Screenshot.prototype, 'screenshot');
 const OUT = GLib.getenv('WF_TEST_OUT');
 const UUID = 'vigil@kigathi-chege.github.io';
 const wait = ms => new Promise(r => GLib.timeout_add(GLib.PRIORITY_DEFAULT, ms, () => { r(); return GLib.SOURCE_REMOVE; }));
+async function shotArea(name, x, y, w, h) {
+    const stream = Gio.File.new_for_path(`${OUT}/${name}.png`).replace(null, false, Gio.FileCreateFlags.NONE, null);
+    await new Shell.Screenshot().screenshot_area(x, y, w, h, stream);
+    stream.close(null);
+}
 async function shot(name) {
     const stream = Gio.File.new_for_path(`${OUT}/${name}.png`).replace(null, false, Gio.FileCreateFlags.NONE, null);
     await new Shell.Screenshot().screenshot(false, stream);
     stream.close(null);
 }
 export default class T extends Extension {
-    enable() { this.run().catch(e => console.log('TESTHOOK FAIL ' + e + '\n' + e.stack)); }
+    // GNOME re-enables later extensions after a disable, so guard against running twice.
+    enable() { if (global._vigilTestRan) return; global._vigilTestRan = true; this.run().catch(e => console.log('TESTHOOK FAIL ' + e + '\n' + e.stack)); }
     async run() {
         console.log('TESTHOOK start');
         const r = {};
@@ -37,6 +43,27 @@ export default class T extends Extension {
         Main.extensionManager.enableExtension(UUID);
         await wait(1500);
         r.afterEnable = Main.extensionManager.lookup(UUID).state + ' err=' + Main.extensionManager.lookup(UUID).error;
+        // Each status color, forced through the thresholds, cropped to the top-right corner.
+        const settings = Main.extensionManager.lookup(UUID).stateObj.getSettings();
+        const panel = Main.extensionManager.lookup(UUID) && Main.panel.statusArea[UUID];
+        const box = panel.get_transformed_extents();
+        const crop = n => shotArea(n, Math.max(0, box.origin.x - 20), 0, box.size.width + 140, Main.panel.height);
+        for (const [name, warn, danger] of [['normal', 100, 100], ['warning', 10, 100], ['danger', 10, 10]]) {
+            settings.set_uint('warning-level', warn);
+            settings.set_uint('danger-level', danger);
+            await wait(2500);
+            r[name] = Main.panel.statusArea[UUID]._pill.style;
+            await crop(`pill-${name}`);
+        }
+        Main.panel.statusArea[UUID].menu.open();
+        await wait(1200);
+        await crop('pill-open');
+        Main.panel.statusArea[UUID].menu.close();
+        settings.reset('warning-level');
+        settings.reset('danger-level');
+        Main.extensionManager.lookup(UUID).stateObj.openPreferences();
+        await wait(4000);
+        await shot('prefs');
         GLib.file_set_contents(`${OUT}/result.json`, JSON.stringify(r, null, 2));
         console.log('TESTHOOK done');
     }

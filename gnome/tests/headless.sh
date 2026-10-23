@@ -29,7 +29,7 @@ gsettings set org.gnome.shell enabled-extensions "['$UUID', 'testhook@local']"
 gsettings set org.gnome.shell welcome-dialog-last-shown-version '999'
 gnome-shell --headless --wayland --no-x11 --virtual-monitor 1600x1000 > "$WF_TEST_OUT/shell.log" 2>&1 &
 pid=$!
-for _ in $(seq 1 60); do
+for _ in $(seq 1 80); do
   [[ -f "$WF_TEST_OUT/result.json" ]] && break
   grep -q 'TESTHOOK FAIL' "$WF_TEST_OUT/shell.log" && break
   sleep 0.5

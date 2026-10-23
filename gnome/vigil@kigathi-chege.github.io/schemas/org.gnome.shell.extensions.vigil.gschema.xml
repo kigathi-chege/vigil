@@ -25,11 +25,22 @@
     <key name="panel-show-cpu" type="b"><default>true</default><summary>Show CPU usage in the top bar</summary></key>
     <key name="panel-show-memory" type="b"><default>true</default><summary>Show memory usage in the top bar</summary></key>
     <key name="panel-show-swap" type="b"><default>false</default><summary>Show swap usage in the top bar</summary></key>
-    <key name="memory-warning" type="u">
-      <range min="50" max="100"/>
-      <default>90</default>
-      <summary>Memory percentage at which the top bar turns orange</summary>
+    <key name="warning-level" type="u">
+      <range min="10" max="100"/>
+      <default>75</default>
+      <summary>Percentage at which the top bar shows the warning color</summary>
     </key>
+    <key name="danger-level" type="u">
+      <range min="10" max="100"/>
+      <default>90</default>
+      <summary>Percentage at which the top bar shows the danger color</summary>
+    </key>
+    <key name="alert-memory" type="b"><default>true</default><summary>Memory usage counts toward the status color</summary></key>
+    <key name="alert-swap" type="b"><default>true</default><summary>Swap usage counts toward the status color</summary></key>
+    <key name="alert-cpu" type="b"><default>false</default><summary>CPU usage (averaged over about 10 seconds) counts toward the status color</summary></key>
+    <key name="color-normal" type="s"><default>'rgba(38,162,105,0.85)'</default><summary>Top bar background when all is well</summary></key>
+    <key name="color-warning" type="s"><default>'rgba(229,165,10,0.9)'</default><summary>Top bar background at the warning level</summary></key>
+    <key name="color-danger" type="s"><default>'rgba(224,27,36,0.9)'</default><summary>Top bar background at the danger level</summary></key>
 
     <key name="menu-process-count" type="u">
       <range min="3" max="20"/>

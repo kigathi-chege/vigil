@@ -85,10 +85,13 @@ export class SystemSampler {
         const fields = (readText('/proc/stat') ?? '').split('\n')[0].trim().split(/\s+/).slice(1, 9).map(Number);
         const idle = fields[3] + fields[4];
         const total = fields.reduce((a, b) => a + b, 0);
-        let cpu = null;
-        if (this._cpu && total > this._cpu.total)
-            cpu = 100 * (1 - (idle - this._cpu.idle) / (total - this._cpu.total));
-        this._cpu = {idle, total};
+        // Sampled again within the same tick (e.g. a settings change): keep the last reading.
+        let cpu = this._lastCpu ?? null;
+        if (!this._cpu || total - this._cpu.total >= 10) {
+            if (this._cpu)
+                cpu = this._lastCpu = 100 * (1 - (idle - this._cpu.idle) / (total - this._cpu.total));
+            this._cpu = {idle, total};
+        }
 
         const mem = parseMeminfo();
         const memTotal = mem.MemTotal * 1024;
