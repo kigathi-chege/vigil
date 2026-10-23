@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <enum id="org.gnome.shell.extensions.widget-framework.sort">
+    <value nick="cpu" value="0"/>
+    <value nick="memory" value="1"/>
+  </enum>
+  <enum id="org.gnome.shell.extensions.widget-framework.corner">
+    <value nick="top-left" value="0"/>
+    <value nick="top-right" value="1"/>
+    <value nick="bottom-left" value="2"/>
+    <value nick="bottom-right" value="3"/>
+  </enum>
+  <enum id="org.gnome.shell.extensions.widget-framework.verse-source">
+    <value nick="online" value="0"/>
+    <value nick="offline" value="1"/>
+  </enum>
+
+  <schema id="org.gnome.shell.extensions.widget-framework" path="/org/gnome/shell/extensions/widget-framework/">
+    <key name="refresh-interval" type="u">
+      <range min="1" max="30"/>
+      <default>2</default>
+      <summary>Seconds between updates</summary>
+    </key>
+
+    <key name="panel-show-cpu" type="b"><default>true</default><summary>Show CPU usage in the top bar</summary></key>
+    <key name="panel-show-memory" type="b"><default>true</default><summary>Show memory usage in the top bar</summary></key>
+    <key name="panel-show-swap" type="b"><default>false</default><summary>Show swap usage in the top bar</summary></key>
+    <key name="memory-warning" type="u">
+      <range min="50" max="100"/>
+      <default>90</default>
+      <summary>Memory percentage at which the top bar turns orange</summary>
+    </key>
+
+    <key name="menu-process-count" type="u">
+      <range min="3" max="20"/>
+      <default>8</default>
+      <summary>Processes listed in the menu</summary>
+    </key>
+    <key name="process-sort" enum="org.gnome.shell.extensions.widget-framework.sort">
+      <default>'cpu'</default>
+      <summary>Sort processes by CPU or memory</summary>
+    </key>
+    <key name="confirm-kill" type="b">
+      <default>true</default>
+      <summary>Ask for a second click before ending or killing a process</summary>
+    </key>
+    <key name="menu-show-verse" type="b"><default>true</default><summary>Show the verse in the menu</summary></key>
+
+    <key name="desktop-widget" type="b"><default>true</default><summary>Show the card on the desktop</summary></key>
+    <key name="desktop-corner" enum="org.gnome.shell.extensions.widget-framework.corner">
+      <default>'top-left'</default>
+      <summary>Desktop card corner</summary>
+    </key>
+    <key name="desktop-margin-x" type="i"><default>24</default><summary>Horizontal distance from the corner</summary></key>
+    <key name="desktop-margin-y" type="i"><default>24</default><summary>Vertical distance from the corner</summary></key>
+    <key name="desktop-show-system" type="b"><default>true</default><summary>Show system information on the desktop</summary></key>
+    <key name="desktop-process-count" type="u">
+      <range min="0" max="10"/>
+      <default>4</default>
+      <summary>Top processes on the desktop card</summary>
+    </key>
+    <key name="desktop-show-verse" type="b"><default>true</default><summary>Show the verse on the desktop</summary></key>
+
+    <key name="verse-source" enum="org.gnome.shell.extensions.widget-framework.verse-source">
+      <default>'online'</default>
+      <summary>Verse of the day from OurManna, or only the bundled KJV verses</summary>
+    </key>
+  </schema>
+</schemalist>

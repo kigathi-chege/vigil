@@ -1,0 +1,51 @@
+/* Top bar */
+.wf-panel-label { padding-left: 4px; font-feature-settings: "tnum"; }
+.wf-panel-label.wf-warn { color: #ff9f43; font-weight: bold; }
+
+/* Menu */
+.wf-summary { font-feature-settings: "tnum"; color: #ccc; }
+.wf-section-title { font-weight: bold; }
+.wf-header { spacing: 6px; }
+
+.wf-button {
+  padding: 3px 9px;
+  margin-left: 4px;
+  border-radius: 6px;
+  font-size: 0.9em;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.wf-button:hover { background-color: rgba(255, 255, 255, 0.16); }
+.wf-button:active { background-color: rgba(255, 255, 255, 0.24); }
+.wf-toggle:checked { background-color: rgba(53, 132, 228, 0.6); }
+.wf-button-danger:hover { background-color: rgba(224, 27, 36, 0.5); }
+.wf-button-armed, .wf-button-armed:hover { background-color: #c01c28; color: white; }
+
+.wf-proc { spacing: 10px; padding-top: 4px; padding-bottom: 4px; }
+.wf-proc-text { width: 220px; }
+.wf-proc-name { font-weight: bold; }
+.wf-proc-cmd { font-size: 0.8em; color: #999; }
+.wf-proc-usage { width: 120px; text-align: right; font-feature-settings: "tnum"; color: #ccc; }
+.wf-proc-locked { font-size: 0.8em; color: #888; padding: 0 9px; }
+.wf-proc-gone .wf-proc-name, .wf-proc-gone .wf-proc-usage { color: #777; }
+
+.wf-verse { padding-top: 8px; padding-bottom: 8px; }
+.wf-verse .wf-verse-text { width: 520px; }
+.wf-verse-text { font-style: italic; line-height: 1.4; }
+.wf-verse-ref { color: #aaa; font-size: 0.9em; padding-top: 6px; }
+
+/* Desktop card: the Conky look */
+.wf-desktop { spacing: 15px; width: 400px; }
+.wf-card {
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  spacing: 4px;
+  color: rgba(255, 255, 255, 0.9);
+}
+.wf-title { font-weight: bold; font-size: 1.1em; padding-bottom: 6px; }
+.wf-subtitle { color: rgba(204, 204, 204, 0.8); padding-top: 10px; padding-bottom: 2px; }
+.wf-row { spacing: 12px; font-family: "DejaVu Sans Mono", monospace; font-size: 0.9em; }
+.wf-key { color: rgba(204, 204, 204, 0.8); }
+.wf-value { font-feature-settings: "tnum"; }
+.wf-card .wf-verse-text { font-size: 1.05em; }

@@ -1,5 +1,44 @@
 # Conky Widget Framework
 
+System monitoring and a daily Bible verse for the Linux desktop, in two editions:
+
+- **GNOME Shell extension** (`gnome/`): for Ubuntu and other GNOME desktops, including Wayland, where Conky can't sit on the desktop. Interactive: pause, resume, end or kill processes from the top bar.
+- **Conky** (`conky.conf`, `lua/`): the original, for X11 desktops.
+
+## GNOME edition
+
+![Desktop card and menu](docs/gnome-menu.png)
+
+- **Top bar:** CPU and memory (optionally swap). It turns orange when memory or swap passes the warning level (90% by default).
+- **Click it** for your top processes, sorted by CPU or memory. Each row shows what the process really is (`node … svelte-check`, not just `node`) and has **Pause / Resume / End / Kill**:
+  - End asks politely (SIGTERM); Kill forces it (SIGKILL). Both need a second click unless you turn that off.
+  - The list is taken when the menu opens and doesn't reorder under your pointer. A button only ever signals the exact process it was shown for, even if its PID has since been reused.
+  - Only your own processes are listed, and desktop essentials (GNOME Shell, audio, session services) are marked `system` with no buttons.
+- **Verse of the day** from OurManna, cached for the day, with **Copy** and **Another verse**. Offline, it uses 20 bundled KJV verses (or set it to use only those).
+- **Desktop card:** the Conky look (system info, top processes, verse), drawn behind all windows. Pick the corner and margins, or turn it off.
+- **Settings** for all of it, from the menu.
+
+### Install
+
+```bash
+git clone https://github.com/kigathi-chege/conky-widget-framework.git
+cd conky-widget-framework
+./gnome/install.sh          # then log out and back in once (Wayland loads new extensions at login)
+```
+
+- `./gnome/install.sh --link` symlinks instead of copying, for working on it.
+- `./gnome/install.sh --pack` builds a zip for `gnome-extensions install` or extensions.gnome.org.
+- `./gnome/install.sh --remove` uninstalls.
+
+Needs GNOME Shell 50 (Ubuntu 26.04). Nothing else to install.
+
+### Tests
+
+- `gjs -m gnome/tests/signals.test.js` pauses, resumes and ends a throwaway `sleep`, and checks the stale-PID guard and the protected list.
+- `gnome/tests/headless.sh [out-dir]` runs the extension in a throwaway headless GNOME Shell, opens the menu, disables and re-enables it, and saves screenshots. It runs in its own D-Bus session with keyfile settings, so it never touches your real session.
+
+## Conky edition (X11)
+
 A modular, reusable Conky widget framework with Cairo graphics rendering.
 
 ## Project Structure

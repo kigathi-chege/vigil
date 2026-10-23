@@ -1,0 +1,23 @@
+import GLib from 'gi://GLib';
+import Gio from 'gi://Gio';
+import {readStat, sendSignal, isProtected, ProcessSampler} from '../widget-framework@kigathi-chege.github.io/stats.js';
+const sleep = ms => new Promise(r => GLib.timeout_add(0, ms, () => { r(); return false; }));
+const loop = new GLib.MainLoop(null, false);
+(async () => {
+  const p = Gio.Subprocess.new(['sleep', '300'], Gio.SubprocessFlags.NONE);
+  const pid = Number(p.get_identifier());
+  await sleep(200);
+  const proc = readStat(pid);
+  const out = [];
+  out.push(`listed ${proc.name} state=${proc.state}`);
+  out.push(`stale guard refuses: ${sendSignal({...proc, start: '1'}, 'KILL') === false && readStat(pid) !== null}`);
+  sendSignal(proc, 'STOP'); await sleep(200); out.push(`after Pause: ${readStat(pid).state}`);
+  sendSignal(proc, 'CONT'); await sleep(200); out.push(`after Resume: ${readStat(pid).state}`);
+  sendSignal(proc, 'TERM'); await sleep(300); out.push(`after End: ${readStat(pid)?.state ?? 'gone'}`);
+  out.push(`gnome-shell protected: ${isProtected({pid: 1, name: 'gnome-shell'}, 0)}, sleep protected: ${isProtected(proc, 0)}`);
+  const s = new ProcessSampler(); s.sample(); await sleep(500);
+  out.push(`own processes sampled: ${s.sample().length}`);
+  print(out.join('\n'));
+  loop.quit();
+})();
+loop.run();
