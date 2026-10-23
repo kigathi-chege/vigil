@@ -38,14 +38,21 @@ case "${1:-}" in
     echo "Built $out/$UUID.shell-extension.zip (install with: gnome-extensions install --force <zip>)"
     ;;
   --link | "")
+    was_running="$(gnome-extensions info "$UUID" 2>/dev/null | grep -q 'State: ACTIVE' && echo 1 || true)"
     glib-compile-schemas --strict "$SRC/schemas"
     mkdir -p "$(dirname "$DEST")"
     rm -rf "$DEST"
     if [[ "${1:-}" == --link ]]; then ln -s "$SRC" "$DEST"; else cp -r "$SRC" "$DEST"; fi
     enable
     echo "Installed to $DEST and enabled."
-    if [[ "${XDG_SESSION_TYPE:-}" == wayland ]] && ! gnome-extensions info "$UUID" &>/dev/null; then
-      echo "GNOME on Wayland loads new extensions at login: log out and back in once to see it."
+    # GNOME Shell keeps an extension's code in memory from login on; on Wayland it can't be
+    # restarted, so both a first install and an update need a fresh login to take effect.
+    if [[ "${XDG_SESSION_TYPE:-}" == wayland ]]; then
+      if [[ -n "$was_running" ]]; then
+        echo "Updated. GNOME is still running the previous version: log out and back in to load this one."
+      else
+        echo "GNOME on Wayland loads new extensions at login: log out and back in once to see it."
+      fi
     fi
     ;;
   *)
