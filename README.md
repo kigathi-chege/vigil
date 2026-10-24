@@ -34,6 +34,7 @@ Needs GNOME Shell 50 (Ubuntu 26.04). Nothing else to install.
 
 ### Tests
 
+- `XDG_CACHE_HOME=$(mktemp -d) gjs -m gnome/tests/verse.test.js` checks verse rotation against the live API: a stale cached verse is re-checked, a fresh one isn't, and a verse you picked stays for the day.
 - `gjs -m gnome/tests/signals.test.js` pauses, resumes and ends a throwaway `sleep`, and checks the stale-PID guard and the protected list.
 - `gnome/tests/headless.sh [out-dir]` runs the extension in a throwaway headless GNOME Shell, opens the menu, disables and re-enables it, and saves screenshots. It runs in its own D-Bus session with keyfile settings, so it never touches your real session.
 
