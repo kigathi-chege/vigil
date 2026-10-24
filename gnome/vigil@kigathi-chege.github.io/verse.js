@@ -6,6 +6,9 @@ import Soup from 'gi://Soup?version=3.0';
 Gio._promisify(Soup.Session.prototype, 'send_and_read_async');
 
 const API = 'https://beta.ourmanna.com/api/v1/get?format=json';
+// OurManna's day doesn't follow your timezone (in Kenya it turns over hours after midnight), so a verse
+// fetched just after local midnight can be yesterday's. Re-check this often during the day.
+const RECHECK_SECONDS = 4 * 3600;
 const decoder = new TextDecoder();
 
 function today() {
@@ -33,17 +36,23 @@ export class VerseProvider {
         this._session.abort();
     }
 
-    // Called on every tick: fetches once a day, so it is cheap to call often.
+    // Called on every tick: fetches a few times a day at most, so it is cheap to call often.
     ensureToday() {
         const now = GLib.get_monotonic_time() / 1e6;
-        if (this.verse.date !== today() && !this._fetching && now - (this._failedAt ?? -Infinity) > 900)
+        if (this._fetching || now - (this._failedAt ?? -Infinity) <= 900)
+            return;
+        const newDay = this.verse.date !== today();
+        // A verse you picked with "Another verse" stays until tomorrow.
+        const recheck = !this.verse.random && this._settings.get_string('verse-source') === 'online' &&
+            GLib.get_real_time() / 1e6 - (this.verse.fetchedAt ?? 0) > RECHECK_SECONDS;
+        if (newDay || recheck)
             this.refresh(false);
     }
 
     async refresh(random) {
         if (this._settings.get_string('verse-source') === 'offline') {
             if (random || this.verse.date !== today())
-                this._set(this._pickFallback());
+                this._set(this._pickFallback(), random);
             return;
         }
         this._fetching = true;
@@ -53,7 +62,7 @@ export class VerseProvider {
             if (msg.get_status() !== Soup.Status.OK)
                 throw new Error(`HTTP ${msg.get_status()}`);
             const details = JSON.parse(decoder.decode(bytes.get_data())).verse.details;
-            this._set({text: details.text, reference: details.reference, version: details.version});
+            this._set({text: details.text, reference: details.reference, version: details.version}, random);
         } catch (e) {
             if (this._cancellable.is_cancelled())
                 return;
@@ -68,8 +77,8 @@ export class VerseProvider {
         }
     }
 
-    _set(verse) {
-        this.verse = {...verse, date: today()};
+    _set(verse, random = false) {
+        this.verse = {...verse, date: today(), fetchedAt: Math.floor(GLib.get_real_time() / 1e6), random};
         try {
             GLib.mkdir_with_parents(GLib.path_get_dirname(this._cacheFile), 0o755);
             GLib.file_set_contents(this._cacheFile, JSON.stringify(this.verse));
